@@ -9,18 +9,20 @@ import re
 import locale
 import database
 import list_ws
+import win32con
 
 locale.setlocale(locale.LC_ALL, 'ru')
 
 debug_level = 0
 def out(string, level):
 	if debug_level >= level :
-		sys.stdout.write(string)
+		#sys.stdout.write(string)
+		pass
 
 
 
 class NetworkLister:
-	def __init__(self, server):
+	def __init__(self, server, v_obj):
 		self.working_share = ''
 		self.working_server = server
 		self.working_path = ''
@@ -30,7 +32,7 @@ class NetworkLister:
 		self.error_count = 0
 		self.shares = 0
 		self.start_time = time.time()
-		self.video = video.VideoClass()
+		self.video = v_obj
 		self.good = 0
 		self.speed_checked = 0
 
@@ -40,7 +42,7 @@ class NetworkLister:
 		out("%s" % self.working_server, 2)
 		bee = 0
 		if self.working_server.lower() == 'beetle':
-			print "YO"
+			#print "YO"
 			self.working_share = 'inbox/video_incoming'
 			self.working_path = 'inbox/video_incoming'
 			self.VideoProcessor('inbox/video_incoming')
@@ -58,13 +60,15 @@ class NetworkLister:
 		
 		shares = smb_client.GetSharesList(self.working_server)#Get list of server shares
 		if bee:
-			print 'beetle shares'
-			print shares
-			time.sleep(5)
+			pass
+			#print 'beetle shares'
+			#print shares
+			#time.sleep(5)
 		if shares:                                           #Server have shares
 			self.shares = len(shares)
 			out("\n", 2)
-			self.do_shares(shares)                           #Process shares
+			self.do_shares(shares)
+			pass                           #Process shares
 		else:                                                #No shares or server inaccessable
 			out("\t[no server]\n", 2)
 			pass
@@ -86,8 +90,10 @@ class NetworkLister:
 		full_path = "//" + self.working_server + "/" + path
 		t = []
 		for i in list:
-			if self.video.GetVideoClass(i.lower()):
-				if not os.path.isfile(full_path + "/" + i):
+			if i[8] == "." or i[8] == "..":
+				continue
+			if self.video.GetVideoClass(i[8].lower()):
+				if i[0] & win32con.FILE_ATTRIBUTE_DIRECTORY:
 					t.append(i)
 	
 		if len(t) > 0:
@@ -150,31 +156,37 @@ class NetworkLister:
 			
 	def VideoProcessor(self, path):
 		'kgkdflgkdf'
-		print "Video Processing"
+		#print "Video Processing"
 		#print path
 		pizda = 0
 		full_path = "//" + self.working_server + "/" + path
-		print "[Getting Dir List]"
+		#print "[Getting Dir List]"
 		content_list = smb_client.GetDirList(full_path)
 		#out("[%s]" % content_list, 2)
 		#out("[%s]" % content_list, 2)
 		
 		if content_list:
 			#tipa tipa opa		
+
 			content_list = self.ListClear(content_list, path)
-			for element in content_list:
+			for el2 in content_list:
+				element = el2[8]
+				pass
+				if element == "." or element == "..":
+					continue
+				w_element = self.video.ClearElement(element)
 				out("[%s]" % element, 4)
 				
 				#if pizda:
 				#	break
 
-				if os.path.isfile(full_path + "/" + element):
-					out(" -> skipped (as file)\n", 4)
+				if not el2[0] & win32con.FILE_ATTRIBUTE_DIRECTORY:
+					#out(" -> skipped (as file)\n", 4)
 					pass
 
 				elif self.video.GetVideoClass(element.lower()):
 					#sdsd
-					out(" -> video class\n", 4)
+					#out(" -> video class\n", 4)
 					self.VideoProcessor(path + "/" + element)
 					#pizda = 1
 				
@@ -191,11 +203,12 @@ class NetworkLister:
 					out(" done\n", 1)
 					pass
 				
-				elif self.video.GetVideoCatalogSkip(element.lower()):
+				elif self.video.GetVideoCatalogSkip(w_element):
 					#asasddas
-					out("[Skip checking]", 1)
-					out(" -> skipped\n", 4)
-					out(" done\n", 1)
+					out("[%s]" % w_element, 0)
+					#out("[Skip checking]", 0)
+					#out(" =====> !!! skipped !!!\n", 0)
+					out(" done\n", 0)
 					pass
 				
 				#elif len(smb_client.GetDirList(full_path + "/" + element)) > 5:
@@ -217,6 +230,7 @@ class NetworkLister:
 
 # ============= entry point
 
+tt1 = time.time()
 open('logging.txt', 'a+').write('Started at %s\n' % (time.asctime(time.localtime(time.time()))))
 times = 0
 start_up_time = time.time()
@@ -234,11 +248,16 @@ print "Working network (%s)..." % times
 print "\tservers: %s" % len(Config['servers'])
 total_servers = len(Config['servers'])
 done = 0
+yo = video.VideoClass()
 for i in Config['servers']:
-	if i == 'absence-pc' or i == 'bears-pc' or i == 'rage-pc' or i == 'mitsar-pc' or i == 'grand-pc' or i == 'valkyrie-pc':
+        pass
+	if i == 'fortress-pc':
+		pass
+	if i == 'leon-pc' or i == 'imperia-pc' or i == 'twilight-pc' or i == 'katafalk-pc' or i == 'vorber-pc' or i == 'floyd-pc':
+		print "fucked"
 		continue
 	print "[%s]" % i
-	lister = NetworkLister(i)
+	lister = NetworkLister(i, yo)
 	done = done + 1
 	percent = int((float(done) / total_servers) * 100)
 	up_time = int(time.time() - start_up_time)
@@ -254,6 +273,7 @@ print "\ttime(sec): %s" % (int(time.time() - start_time))
 print "\tvideo: %s" % good
 print
 database.database(films, speeds)
+print "Done in %2.2f sec." % (time.time() - tt1)
 print "Sleeping..."
 #time.sleep(300)
 print

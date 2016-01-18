@@ -2,6 +2,7 @@ import smb, nmb
 import thread
 import os
 import time
+import win32api
 
 class nb:
 	def __init__(self, host, user, passwd, timeout):
@@ -47,7 +48,10 @@ def GetSharesList(server):
 
 
 def GetDirList(path):
+	#print path
 	try:
-		return os.listdir(path)
-	except:
+		return win32api.FindFiles(path + "\*")
+		#return os.listdir(path)
+	except Exception, e:
+		print e
 		return 0

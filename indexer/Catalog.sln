@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{6021F4C0-62D6-4BDA-8A89-4D7F5EB4B402}") = "Catalog", "Catalog.pythonproj", "{8C824924-81B7-428B-98B0-6471B125804A}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8C824924-81B7-428B-98B0-6471B125804A}.Debug.ActiveCfg = Debug
+		{8C824924-81B7-428B-98B0-6471B125804A}.Release.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

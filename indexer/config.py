@@ -3,11 +3,11 @@ import MySQLdb
 class Config:
 
 	def __init__(self):
-		self.db = MySQLdb.connect('localhost', 'search_engine', 'search_engine_password', 'video_catalog')
 		self.config = {}
 		self.y = ['VideoClass', 'SubVideoClass', 'OtherClass', 'VideoCatalogSkip', 'FromElementDel']
 
 	def Load(self, param):
+		self.db = MySQLdb.connect('localhost', 'search_engine', 'search_engine_password', 'video_catalog')
 		c = self.db.cursor()
 		self.config[param] = []
 		for n in range(0,2):
@@ -17,7 +17,9 @@ class Config:
 			for i in c.fetchall():
 				x.append(i[0])
 			self.config[param].append(x)
+		self.db.close()
 		return self.config
+
 	
 	def LoadAll(self):
 		for i in self.y:

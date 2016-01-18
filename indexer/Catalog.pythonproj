@@ -1,0 +1,49 @@
+"General"
+{
+"Version" = "1.2.1"
+}
+"Configurations"
+{
+    "Debug"
+    {
+    "LaunchArgs" = ""
+    "BuildCmdLine" = ""
+    "BuildOutputs" = ""
+    "DebuggerName" = ""
+    "ScriptArgs" = ""
+    "RunInShell" = "F"
+    "UseCGIEnvironment" = "F"
+    "ShowRedSquigglies" = "T"
+    "DontImplyImportSite" = "F"
+    "UnbufferedBinary" = "F"
+    "DisableClassBasedExceptions" = "F"
+    "Verbose" = "F"
+    "LaunchCmdLine" = ""
+    }
+    "Release"
+    {
+    "LaunchArgs" = ""
+    "BuildCmdLine" = ""
+    "BuildOutputs" = ""
+    "DebuggerName" = ""
+    "ScriptArgs" = ""
+    "RunInShell" = "F"
+    "UseCGIEnvironment" = "F"
+    "ShowRedSquigglies" = "T"
+    "DontImplyImportSite" = "F"
+    "UnbufferedBinary" = "F"
+    "DisableClassBasedExceptions" = "F"
+    "Verbose" = "F"
+    "LaunchCmdLine" = ""
+    }
+}
+"Files"
+{
+    "main.py"
+    {
+    "ProjRelPath" = "T"
+    }
+}
+"ProjStartupServices"
+{
+}

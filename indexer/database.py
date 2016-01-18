@@ -62,7 +62,7 @@ class database:
 					if f_1:
 						query_1 = query_1 + ","
 					#self.cursor.execute("insert into films_locations (film_id, workstation, path, element) values('%s', '%s', '%s', '%s')" % (film_id, location[0], location[1], re.escape(location[2])))
-					query_1 = query_1 + "('%s', '%s', '%s', '%s', '0', '0', '0')\n" % (film_id, location[0], location[1], re.escape(location[2]))
+					query_1 = query_1 + "('%s', '%s', '%s', '%s', '0', '0', '0')\n" % (film_id, location[0], location[1].replace("'", "''"), re.escape(location[2]))
 					f_1 = 1
 
 			else:
@@ -83,6 +83,7 @@ class database:
 
 		query_1 = query_1 + ";"
 		query_2 = query_2 + ";"
+		#open('sql_error.log', 'a+').write('\n\n\n' + query_1 + '\n' + query_2 + '\n========')
 		self.cursor.execute(query_1)
 		self.cursor.execute(query_2)
 		#open('asdadasd.txt', 'w').write(query)
