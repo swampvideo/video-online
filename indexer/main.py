@@ -12,7 +12,7 @@ import list_ws
 
 locale.setlocale(locale.LC_ALL, 'ru')
 
-debug_level = 1
+debug_level = 0
 def out(string, level):
 	if debug_level >= level :
 		sys.stdout.write(string)
@@ -38,7 +38,29 @@ class NetworkLister:
 
 	def run(self):
 		out("%s" % self.working_server, 2)
+		bee = 0
+		if self.working_server.lower() == 'beetle':
+			print "YO"
+			self.working_share = 'inbox/video_incoming'
+			self.working_path = 'inbox/video_incoming'
+			self.VideoProcessor('inbox/video_incoming')
+			bee = 1
+
+#		if self.working_server.lower() == 'necropol-pc':
+#			print "necropol"
+#			self.working_share = '_Video_/Films'
+#			self.working_path = '_Video_/Films'
+#			self.VideoProcessor('_Video_/Films')
+
+
+		
+		
+		
 		shares = smb_client.GetSharesList(self.working_server)#Get list of server shares
+		if bee:
+			print 'beetle shares'
+			print shares
+			time.sleep(5)
 		if shares:                                           #Server have shares
 			self.shares = len(shares)
 			out("\n", 2)
@@ -56,6 +78,7 @@ class NetworkLister:
 				out("\t{%s}\n" % share, 2)
 				self.VideoProcessor(share)
 				#self.do_path(share)
+
 	
 	def ListClear(self, list, path):
 		'sdf'
@@ -127,8 +150,11 @@ class NetworkLister:
 			
 	def VideoProcessor(self, path):
 		'kgkdflgkdf'
+		print "Video Processing"
+		#print path
 		pizda = 0
 		full_path = "//" + self.working_server + "/" + path
+		print "[Getting Dir List]"
 		content_list = smb_client.GetDirList(full_path)
 		#out("[%s]" % content_list, 2)
 		#out("[%s]" % content_list, 2)
@@ -154,17 +180,22 @@ class NetworkLister:
 				
 				elif self.video.GetSubVideoClass(element.lower()):
 					#sub video class
-					out(" -> Sub video class\n", 4)
+					out("[Sub video class]", 1)
 					self.VideoProcessor(path + "/" + element)
-				
+					out(" done\n", 1)
+
 				elif self.video.GetOtherClass(element.lower()):
 					#other class
+					out("[Other class]", 1)
 					out(" -> other class\n", 4)
+					out(" done\n", 1)
 					pass
 				
 				elif self.video.GetVideoCatalogSkip(element.lower()):
 					#asasddas
+					out("[Skip checking]", 1)
 					out(" -> skipped\n", 4)
+					out(" done\n", 1)
 					pass
 				
 				#elif len(smb_client.GetDirList(full_path + "/" + element)) > 5:
@@ -195,7 +226,7 @@ good = 0
 films = {}
 speeds = {}
 start_time = time.time()
-#list_ws.make_list()
+list_ws.make_list()
 Config = cfg_file.Load()
 #Config['servers'] = ['beetle']
 print
@@ -204,8 +235,9 @@ print "\tservers: %s" % len(Config['servers'])
 total_servers = len(Config['servers'])
 done = 0
 for i in Config['servers']:
-	if i == 'absence-pc':
+	if i == 'absence-pc' or i == 'bears-pc' or i == 'rage-pc' or i == 'mitsar-pc' or i == 'grand-pc' or i == 'valkyrie-pc':
 		continue
+	print "[%s]" % i
 	lister = NetworkLister(i)
 	done = done + 1
 	percent = int((float(done) / total_servers) * 100)

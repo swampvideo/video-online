@@ -6,7 +6,7 @@ class database:
 	"store finded data to database"
 
 	def __init__(self, data, speeds):
-		self.db = MySQLdb.connect('127.0.0.1', 'radm', 'vfqjytP', 'video_catalog')
+		self.db = MySQLdb.connect('localhost', 'search_engine', 'search_engine_password', 'video_catalog')
 		self.cursor = self.db.cursor()
 		self.speeds = speeds
 		self.data = data
@@ -62,14 +62,14 @@ class database:
 					if f_1:
 						query_1 = query_1 + ","
 					#self.cursor.execute("insert into films_locations (film_id, workstation, path, element) values('%s', '%s', '%s', '%s')" % (film_id, location[0], location[1], re.escape(location[2])))
-					query_1 = query_1 + "('%s', '%s', '%s', '%s', '0', '0', '0')\n" % (film_id, re.escape(location[0]), re.escape(location[1]), re.escape(location[2]))
+					query_1 = query_1 + "('%s', '%s', '%s', '%s', '0', '0', '0')\n" % (film_id, location[0], location[1], re.escape(location[2]))
 					f_1 = 1
 
 			else:
 				#alias not found - copy element(only) into 'new' table
 				loc = ""
 				for i in self.data[element]:
-					loc = loc + i[0] + " "
+					loc = loc + i[0] + "/" + i[1] + " "
 				if f_2:
 					query_2 = query_2 + ","
 				query_2 = query_2 + "('%s', '%s')\n" % (re.escape(element), re.escape(loc.lower()))
@@ -83,11 +83,8 @@ class database:
 
 		query_1 = query_1 + ";"
 		query_2 = query_2 + ";"
-		print query_1
-		print "========"
-		print query_2
-		#self.cursor.execute(query_1)
-		#self.cursor.execute(query_2)
+		self.cursor.execute(query_1)
+		self.cursor.execute(query_2)
 		#open('asdadasd.txt', 'w').write(query)
 		
 		#done

@@ -39,7 +39,7 @@ class nb:
 
 def GetSharesList(server):
 	shar = []
-	o = nb(server, 'guest', '', 30)
+	o = nb(server, 'guest', '', 0.5)
 	shares = o.get_share()
 	del o
 	return shares
@@ -51,4 +51,3 @@ def GetDirList(path):
 		return os.listdir(path)
 	except:
 		return 0
-
